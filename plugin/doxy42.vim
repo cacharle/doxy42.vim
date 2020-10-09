@@ -6,30 +6,37 @@
 "    By: cacharle <me@cacharle.xyz>                 +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2020/10/05 10:44:46 by cacharle          #+#    #+#              "
-"    Updated: 2020/10/08 18:16:57 by cacharle         ###   ########.fr        "
+"    Updated: 2020/10/09 17:00:50 by cacharle         ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
 function! s:Doxy42()
+    normal! mq
+
     let l:line = getline(".")
 
-    let l:match_pos = match(l:line, '(.*)')
+    let l:match_pos = match(l:line, '(')
     if l:match_pos == -1
         echo 'Use this command on function declaration line'
         return
     endif
 
-    let l:has_return = 1
-    if match(l:line[:match_pos], 'void') != -1
-        let l:has_return = 0
+    call cursor(line("."), l:match_pos + 1)
+    normal! yi(
+    normal! `q
+
+    let l:args = substitute(@", "\n", ' ', 'g')
+    let l:args = split(l:args, ',')
+
+    let l:has_return = match(l:line[:match_pos], 'void') == -1
+    if !l:has_return && match(l:line[:match_pos], 'void\s*\*') != -1
+        let l:has_return = 1
     endif
-
-    let l:parent_content = l:line[l:match_pos + 1:-2]
-
-    let l:args = split(l:parent_content, ',')
 
     let l:i = 0
     while i < len(l:args)
+        let l:args[i] = substitute(l:args[i], '\[.*\]', '', 'g')
+        let l:args[i] = substitute(l:args[i], '(\*\([a-z]*\))(.*)', '\1', '')
         let l:args[i] = get(split(l:args[i]), -1)
         while l:args[i][0] == '*'
             let l:args[i] = l:args[i][1:]
