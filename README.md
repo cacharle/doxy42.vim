@@ -2,7 +2,17 @@
 
 A vim plugin to add doxygen like comment for function declarations.
 
-![record](record.gif)
+![preview](https://i.imgur.com/wN7hHH9.gif)
+
+## Install
+
+#### [Plug](https://github.com/junegunn/vim-plug)
+
+```vim
+call plug#begin()
+    Plug 'cacharle/c_formatter_42.vim'
+call plug#end()
+```
 
 ## Usage
 
