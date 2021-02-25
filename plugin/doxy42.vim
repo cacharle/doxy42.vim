@@ -6,14 +6,14 @@
 "    By: cacharle <me@cacharle.xyz>                 +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2020/10/05 10:44:46 by cacharle          #+#    #+#              "
-"    Updated: 2020/10/09 17:00:50 by cacharle         ###   ########.fr        "
+"    Updated: 2021/02/25 16:37:23 by cacharle         ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
 function! s:Doxy42()
     normal! mq
 
-    let l:line = getline(".")
+    let l:line = getline('.')
 
     let l:match_pos = match(l:line, '(')
     if l:match_pos == -1
@@ -21,7 +21,7 @@ function! s:Doxy42()
         return
     endif
 
-    call cursor(line("."), l:match_pos + 1)
+    call cursor(line('.'), l:match_pos + 1)
     normal! yi(
     normal! `q
 
@@ -38,7 +38,7 @@ function! s:Doxy42()
         let l:args[i] = substitute(l:args[i], '\[.*\]', '', 'g')
         let l:args[i] = substitute(l:args[i], '(\*\([a-z]*\))(.*)', '\1', '')
         let l:args[i] = get(split(l:args[i]), -1)
-        while l:args[i][0] == '*'
+        while l:args[i][0] ==# '*'
             let l:args[i] = l:args[i][1:]
         endwhile
         let i = i + 1
@@ -68,4 +68,7 @@ function! s:Doxy42()
     let @/ = '$'
 endfunction
 
-autocmd Filetype c,cpp command! Doxy42 call s:Doxy42()
+augroup doxy42
+    autocmd!
+    autocmd Filetype c,cpp command! Doxy42 call s:Doxy42()
+augroup END
